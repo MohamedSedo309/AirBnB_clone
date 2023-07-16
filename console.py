@@ -34,7 +34,7 @@ class HBNBCommand(cmd.Cmd):
         "Review"
     }
 
-    def empty_line(self):
+    def emptyline(self):
         """an empty line + ENTER t execute anything"""
         pass
     
