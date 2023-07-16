@@ -20,8 +20,11 @@ class HBNBCommand(cmd.Cmd):
     }
 
     def parse(arg):
+    print("input argument:", arg)
     curly_braces = re.search(r"\{(.*?)\}", arg)
     brackets = re.search(r"\[(.*?)\]", arg)
+    print("curly braces:", curly_braces)
+    print("brackets:", brackets)
     if curly_braces is None:
         if brackets is None:
             return [i.strip(",") for i in split(arg)]
@@ -35,7 +38,6 @@ class HBNBCommand(cmd.Cmd):
         retl = [i.strip(",") for i in lexer]
         retl.append(curly_braces.group())
         return retl
-
         
     def emptyline(self):
         """an empty line + ENTER t execute anything"""
