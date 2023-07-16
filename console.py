@@ -23,7 +23,7 @@ def parse(arg):
     
 class HBNBCommand(cmd.Cmd):
     """create command interpreter"""
-    prompt = ("(hbnb)")
+    prompt = ("(hbnb) ")
     __classes = {
         "BaseModel",
         "User",
@@ -46,6 +46,14 @@ class HBNBCommand(cmd.Cmd):
         """EOF signal to exit the console"""
         print("")
         return True
+
+    def help_quit(self):
+        """Help documentation for the quit command"""
+        print('Quit command to exit the program')
+
+    def help_EOF(self):
+        """Help documentation for the EOF command"""
+        print('EOF command to exit the program')
     
     def do_help(self, arg):
         """List available commands with "help" or detailed help with "help cmd"."""
