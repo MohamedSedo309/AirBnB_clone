@@ -36,8 +36,8 @@ class BaseModel:
         dictionary["__class__"] = self.__class__.__name__
         dictionary["created_at"] = self.created_at.isoformat()
         dictionary["updated_at"] = self.updated_at.isoformat()
-        dict = self.__dict__.copy()
-        dictionary.update(dict)
+        dic = self.__dict__.copy()
+        dictionary.update(dic)
         return dictionary
     
     def __str__(self):
