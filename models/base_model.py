@@ -32,12 +32,10 @@ class BaseModel:
 
     def to_dict(self):
         """return the dictionary of an intstance"""
-        dictionary = dict()
-        dictionary["__class__"] = self.__class__.__name__
+        dictionary = self.__dict__.copy()
         dictionary["created_at"] = self.created_at.isoformat()
         dictionary["updated_at"] = self.updated_at.isoformat()
-        dic = self.__dict__.copy()
-        dictionary.update(dic)
+        dictionary["__class__"] = self.__class__.__name__
         return dictionary
     
     def __str__(self):
