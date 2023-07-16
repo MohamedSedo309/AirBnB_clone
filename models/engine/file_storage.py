@@ -31,3 +31,10 @@ class FileStorage:
                     self.new(eval(cls_name)(**o))
         except FileNotFoundError:
             raise FileNotFoundError("File not found: {}".format(FileStorage.__file_path))
+
+    def save(self):
+        """Serialize __objects to the JSON file __file_path."""
+        obj_dictionary = FileStorage.__objects
+        objdict = {obj: obj_dictionary[obj].to_dict() for obj in obj_dictionary.keys()}
+        with open(FileStorage.__file_path, "w") as f:
+            json.dump(objdict, f)
