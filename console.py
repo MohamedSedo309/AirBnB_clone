@@ -34,6 +34,24 @@ class HBNBCommand(cmd.Cmd):
         "Review"
     }
 
+    
+    def parse(arg):
+    curly_brackets = re.search(r"\{(.*?)\}", arg)
+    square_brackets = re.search(r"\[(.*?)\]", arg)
+    if curly_brackets is None:
+        if square_brackets is None:
+            return [i.strip(",") for i in split(arg)]
+        else:
+            text_till_brackets = split(arg[:square_brackets.span()[0]])
+            splitted_tokens = [i.strip(",") for i in text_till_brackets]
+            splitted_tokens.append(square_brackets.group())
+            return splitted_tokens
+    else:
+        text_till_brackets = split(arg[:curly_brackets.span()[0]])
+        splitted_tokens = [i.strip(",") for i in text_till_brackets]
+        splitted_tokens.append(curly_brackets.group())
+        return splitted_tokens
+        
     def emptyline(self):
         """an empty line + ENTER t execute anything"""
         pass
