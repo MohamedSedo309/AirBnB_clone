@@ -55,22 +55,6 @@ class HBNBCommand(cmd.Cmd):
         """Help documentation for the EOF command"""
         print('EOF command to exit the program')
     
-    def do_help(self, arg):
-        """List available commands with "help" or detailed help with "help cmd"."""
-        if arg:
-            try:
-                doc = getattr(self, 'do_' + arg).__doc__
-                if doc:
-                    self.stdout.write('{}\n'.format(doc))
-                    return
-            except AttributeError:
-                pass
-            self.stdout.write('{} is not a valid command\n'.format(arg))
-        else:
-            commands = [cmd[3:] for cmd in dir(self) if cmd.startswith('do_')]
-            self.stdout.write('Available commands:\n')
-            self.stdout.write('\n'.join(sorted(commands)))
-            self.stdout.write('\n')
     
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
