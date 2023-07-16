@@ -20,8 +20,8 @@ class HBNBCommand(cmd.Cmd):
     }
 
     def parse(arg):
-    curly_braces = re.search(r"\{(.*?)\}", arg)
-    brackets = re.search(r"\[(.*?)\]", arg)
+    curly_braces = re.search(r"\{.*?\}", arg)
+    brackets = re.searchr(r"\[.*?\]", arg)
     if curly_braces is None:
         if brackets is None:
             return [i.strip(",") for i in split(arg)]
