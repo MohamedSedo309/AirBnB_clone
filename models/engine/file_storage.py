@@ -22,15 +22,27 @@ class FileStorage:
         Deserialize the JSON file __file_path to __objects, if it exists.
         fromjson .....
         """
+        from models.base_model import BaseModel
+        from models.user import User
+        from models.place import Place
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.review import Review
+
+        classes = {
+                    'BaseModel': BaseModel, 'User': User, 'Place': Place,
+                    'State': State, 'City': City, 'Amenity': Amenity,
+                    'Review': Review
+                  }
         try:
-            with open(FileStorage.__file_path) as f:
-                objdict = json.load(f)
-                for o in objdict.values():
-                    cls_name = o["__class__"]
-                    del o["__class__"]
-                    self.new(eval(cls_name)(**o))
+            temp = {}
+            with open(FileStorage.__file_path, 'r') as f:
+                temp = json.load(f)
+                for key, val in temp.items():
+                        self.all()[key] = classes[val['__class__']](**val)
         except FileNotFoundError:
-            raise FileNotFoundError("File not found: {}".format(FileStorage.__file_path))
+            pass
 
     def save(self):
         """Serialize __objects to the JSON file __file_path."""
