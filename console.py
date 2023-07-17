@@ -1,55 +1,39 @@
 #!/usr/bin/python3
-
+"""
+This module contains a class that defines an
+entry point to a command interpreter
+"""
 import cmd
-import re
-from shlex import split
 from models.base_model import BaseModel
-from models.__init__ import storage
 from models.user import User
-from models.place import Place
-from models.state import State
 from models.city import City
-from models.amenity import Amenity
+from models.state import State
 from models.review import Review
+from models.place import Place
+from models.amenity import Amenity
+from models import storage
 
 
-
-    
 class HBNBCommand(cmd.Cmd):
     """create command interpreter"""
-    prompt = ("(hbnb) ")
-    __classes = {
-        "BaseModel",
-        "User",
-        "State",
-        "City",
-        "Place",
-        "Amenity",
-        "Review"
-    }
 
-        
-    def emptyline(self):
-        """an empty line + ENTER t execute anything"""
-        pass
-    
-    def do_quit(self, arg):
-        """quit the console"""
-        exit(1)
-    
-    def do_EOF(self, arg):
-        """EOF signal to exit the console"""
-        print("")
-        return True
+    prompt = "(hbnb) "
 
-    def help_quit(self):
-        """Help documentation for the quit command"""
-        print('Quit command to exit the program')
+    def do_create(self, arg):
+        """
+        Create a instance and print its id
+        """
 
-    def help_EOF(self):
-        """Help documentation for the end of command"""
-        return True
-
+        if arg:
+            try:
+                cls = globals()[arg]
+                new_obj = cls()
+                new_obj.save()
+                print(new_obj.id)
+            except KeyError:
+                print("** class doesn't exist **")
+        else:
+            print("** class name missing **")
 
     def do_show(self, arg):
         """
@@ -77,7 +61,9 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, arg):
         """
-        Delete a class instance of a given id."""
+        Delete a class instance of a given id
+        """
+
         if arg:
             args = arg.split()
             try:  # check if class name exits
@@ -98,53 +84,11 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** class name missing **")
 
-    def do_create(self, arg):
-        """
-        Create a instance and print its id
-        """
-        if arg:
-            try:
-                cls = globals()[arg]
-                new_obj = cls()
-                new_obj.save()
-                print(new_obj.id)
-            except KeyError:
-                print("** class doesn't exist **")
-        else:
-            print("** class name missing **")
-
-    def do_all(self, arg):
-        """
-        Display string representations of all instances of a given class.
-        If no class is specified, displays all instantiated objects."""
-        all_objs = storage.all()
-        if arg:
-            try:
-                cls = globals()[arg]
-                for key, value in all_objs.items():
-                    if type(value) == cls:
-                        print(value)
-            except KeyError:
-                print("** class doesn't exist **")
-        else:
-            for key, value in all_objs.items():
-                print(value)
-
-    def do_count(self, arg):
-        """
-        Retrieve the number of instances of a given class."""
-        argl = parse(arg)
-        count = 0
-        for obj in storage.all().values():
-            if argl[0] == obj.__class__.__name__:
-                count += 1
-        print(count)
-
     def do_update(self, arg):
         """
             Update a class instance of a given id by adding or updating
-            a given attribute key/value pair or dictionary. """
-
+            a given attribute key/value pair or dictionary.
+        """
         if not arg:
             print("** class name missing **")
             return
@@ -176,7 +120,38 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
         else:
             print("** class name missing **")
-    
-    
+
+    def do_all(self, arg):
+        """
+        Display string representations of all instances of a given class.
+        If no class is specified, displays all instantiated objects.
+        """
+
+        all_objs = storage.all()
+        if arg:
+            try:
+                cls = globals()[arg]
+                for key, value in all_objs.items():
+                    if type(value) == cls:
+                        print(value)
+            except KeyError:
+                print("** class doesn't exist **")
+        else:
+            for key, value in all_objs.items():
+                print(value)
+
+    def emptyline(self):
+        """an empty line + ENTER t execute anything"""
+        pass
+
+    def do_quit(self, line):
+        """Exits the program"""
+        exit(1)
+
+    def do_EOF(self, line):
+        """handles End of File"""
+        return True
+
+
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
