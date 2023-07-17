@@ -1,44 +1,50 @@
 #!/usr/bin/python3
 """Define Base Model class"""
-import models
 from uuid import uuid4
 from datetime import datetime
+import models
+
 
 class BaseModel:
     """Creating the base model class"""
-
-    def __init__(self, *arg, **kwargs):
+    def __init__(self, *args, **kwargs):
         """
         init new base model
         """
-        timeform = "%Y-%m-%dT%H:%M:%S.%f"
-        self.id = str(uuid4())
-        self.created_at = datetime.today()
-        self.updated_at = datetime.today()
-
-        if len(kwargs) != 0:
-            for k, v in kwargs.items():
-                if k == "created_at" or k == "updated_at":
-                    self.__dict__[k] = datetime.strptime(v, timeform)
-                else:
-                    self.__dict__[k] = v
+        if kwargs:
+            for key, value in kwargs.items():
+                if key != "__class__":
+                    setattr(self, key, value)
+            _format = "%Y-%m-%dT%H:%M:%S.%f"
+            self.created_at = datetime.strptime(self.created_at, _format)
+            self.updated_at = datetime.strptime(self.updated_at, _format)
         else:
+            self.id = str(uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
             models.storage.new(self)
+
+    
 
     def save(self):
         """update the updateded at field"""
         self.updated_at = datetime.now()
-        storage.save()
+        models.storage.save()
 
     def to_dict(self):
         """return the dictionary of an intstance"""
-        dictionary = self.__dict__.copy()
-        dictionary["created_at"] = self.created_at.isoformat()
-        dictionary["updated_at"] = self.updated_at.isoformat()
-        dictionary["__class__"] = self.__class__.__name__
-        return dictionary
+        new_dict = {}
+        for k, v in self.__dict__.items():
+            if k == "created_at" or k == "updated_at":
+                new_dict[k] = v.isoformat()
+            else:
+                new_dict[k] = v
+        new_dict["__class__"] = type(self).__name__
+        return new_dict
     
     def __str__(self):
         """string represntation for instance"""
-        name = self.__class__.__name__
-        return "[{}] ({}) {}".format(name, self.id, self.__dict__)
+        classname = type(self).__name__
+        iid = self.id
+        i_dic = self.__dict__
+        return "[{}] ({}) {}".format(classname, iid, i_dic)
